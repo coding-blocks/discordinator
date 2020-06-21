@@ -1,11 +1,10 @@
 import { Entity, Column, ManyToMany, OneToMany, Index } from 'typeorm';
-import { BaseEntity } from './concerns/BaseEntity';
-import { IDiscordEntity } from '~/types';
 import { Role } from './Role';
 import { UserRolesRole } from './UserRolesRole';
+import { DiscordEntity } from './concerns/DiscordEntity';
 
 @Entity()
-export class User extends BaseEntity implements IDiscordEntity {
+export class User extends DiscordEntity {
   @Index({ unique: true })
   @Column()
   oneauthId: number;
@@ -13,10 +12,6 @@ export class User extends BaseEntity implements IDiscordEntity {
   @Index({ unique: true })
   @Column()
   amoebaId: number;
-
-  @Index({ unique: true })
-  @Column()
-  discordId: string;
 
   @ManyToMany('Role', 'users', {
     cascade: true,

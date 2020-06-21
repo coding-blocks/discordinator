@@ -7,7 +7,7 @@ import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import { createConnection } from 'typeorm';
 import { useExpressServer } from 'routing-controllers';
-import config from './config';
+import config from '~/config';
 
 const start = async () => {
   const app = express();
@@ -25,11 +25,11 @@ const start = async () => {
     controllers: [__dirname + '/controllers/**/*.ts'],
   });
 
-  app.listen(config.app.port, config.app.host, () =>
+  app.listen(config.app.port, config.app.host, async () => {
     console.log(
       `Started server at http://${config.app.host}:${config.app.port}`,
-    ),
-  );
+    );
+  });
 };
 
 start();
