@@ -1,4 +1,5 @@
-require('dotenv').config();
+import dotenv = require('dotenv');
+dotenv.config();
 import 'reflect-metadata';
 import 'module-alias/register';
 import * as express from 'express';

@@ -4,7 +4,7 @@ import { Channel } from './concerns/Channel';
 
 @Entity()
 @Index(['courseCode'], { unique: true })
-export class LobbyChannel extends Channel {
+export class LobbyChannel extends Channel implements IDiscordEntity {
   get name(): string {
     return LobbyChannel.getName({ courseCode: this.courseCode });
   }
