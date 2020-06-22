@@ -51,7 +51,7 @@ export class AccessToken implements IAccessTokenProps {
   constructor({ verified, ...props }: IAccessTokenProps) {
     Object.assign(this, props);
 
-    this._verified = verified;
+    this.#verified = verified;
   }
 
   readonly aud: string;
@@ -59,15 +59,15 @@ export class AccessToken implements IAccessTokenProps {
   readonly iat: number;
   readonly value: string;
 
-  private _error: any;
-  private _verified: boolean;
+  #error: any;
+  #verified: boolean;
 
   get error(): any {
-    return this._error;
+    return this.#error;
   }
 
   get verified(): boolean {
-    return this._verified;
+    return this.#verified;
   }
 
   verify(checks?: IAccessTokenVerifyProps): boolean {
@@ -82,17 +82,17 @@ export class AccessToken implements IAccessTokenProps {
         );
 
         if (err) {
-          this._error = err;
+          this.#error = err;
           return false;
         }
       }
 
       jwt.verify(this.value, config.app.secret);
-      this._verified = true;
+      this.#verified = true;
 
       return true;
     } catch (err) {
-      this._error = err;
+      this.#error = err;
       return false;
     }
   }

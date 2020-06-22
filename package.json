@@ -37,7 +37,7 @@
     "module-alias": "^2.2.2",
     "prettier": "^2.0.5",
     "ts-node": "3.3.0",
-    "typescript": "3.3.3333"
+    "typescript": "^3.9.5"
   },
   "_moduleAliases": {
     "~": "."
@@ -48,6 +48,9 @@
     }
   },
   "lint-staged": {
-    "*/**/*.{js,ts}": ["eslint --fix --quiet", "prettier --write --loglevel silent"]
+    "*/**/*.{js,ts}": [
+      "eslint --fix --quiet",
+      "prettier --write --loglevel silent"
+    ]
   }
 }
