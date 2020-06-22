@@ -1,7 +1,11 @@
 import { Entity, Column, OneToMany, Check } from 'typeorm';
 import { Role } from './Role';
-import { ChannelKind } from '~/types';
 import { DiscordEntity } from './concerns/DiscordEntity';
+
+export enum ChannelKind {
+  BATCH = 'BatchChannel',
+  LOBBY = 'LobbyChannel',
+}
 
 @Entity()
 export class Channel extends DiscordEntity {
@@ -42,8 +46,7 @@ export class Channel extends DiscordEntity {
     courseKind?: string;
     batchCode?: string;
   }): string {
-    if (kind === ChannelKind.BATCH)
-      return `${courseKind}${courseCode}${batchCode}`.toUpperCase();
+    if (kind === ChannelKind.BATCH) return `${courseKind}${courseCode}${batchCode}`.toUpperCase();
     if (kind === ChannelKind.LOBBY) return `lobby-${courseCode}`.toUpperCase();
 
     return '';

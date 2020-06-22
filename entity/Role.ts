@@ -1,16 +1,13 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  ManyToMany,
-  OneToMany,
-  Index,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, ManyToMany, OneToMany, Index } from 'typeorm';
 import { User } from './User';
-import { Channel } from './Channel';
 import { UserRolesRole } from './UserRolesRole';
-import { RoleKind, ChannelKind } from '~/types';
+import { Channel, ChannelKind } from './Channel';
 import { DiscordEntity } from './concerns/DiscordEntity';
+
+export enum RoleKind {
+  STUDENT = 'Student',
+  ASSISTANT = 'Assistant',
+}
 
 @Entity()
 export class Role extends DiscordEntity {
@@ -30,18 +27,10 @@ export class Role extends DiscordEntity {
     return Role.getName({ kind: this.kind, channel: this.channel });
   }
 
-  static getName({
-    kind,
-    channel,
-  }: {
-    kind: RoleKind;
-    channel: Channel;
-  }): string {
-    if (channel.kind === ChannelKind.LOBBY)
-      return `${kind}/${channel.courseCode}`.toUpperCase();
+  static getName({ kind, channel }: { kind: RoleKind; channel: Channel }): string {
+    if (channel.kind === ChannelKind.LOBBY) return `${kind}/${channel.courseCode}`.toUpperCase();
 
-    if (channel.kind === ChannelKind.BATCH)
-      return `${kind}/${channel.name}`.toUpperCase();
+    if (channel.kind === ChannelKind.BATCH) return `${kind}/${channel.name}`.toUpperCase();
 
     return '';
   }

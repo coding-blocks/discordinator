@@ -3,7 +3,8 @@
     "start": "ts-node app.ts",
     "eslint": "eslint '*/**/*.{js,ts}' --quiet --fix",
     "prettier": "prettier --write '*/**/*.{js,ts}' --loglevel silent",
-    "lint": "yarn eslint && yarn prettier"
+    "lint": "yarn eslint && yarn prettier",
+    "generate:token": "ts-node ./bin/generateAccessToken.ts --audience"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -12,12 +13,14 @@
     "compression": "^1.7.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
     "pg": "^7.3.0",
     "reflect-metadata": "^0.1.10",
     "routing-controllers": "^0.9.0-alpha.4",
     "typeorm": "0.2.25",
-    "typeorm-routing-controllers-extensions": "^0.2.0"
+    "typeorm-routing-controllers-extensions": "^0.2.0",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
@@ -44,11 +47,7 @@
       "pre-commit": "lint-staged"
     }
   },
-
   "lint-staged": {
-    "*/**/*.{js,ts}": [
-      "eslint --fix --quiet",
-      "prettier --write --loglevel silent"
-    ]
+    "*/**/*.{js,ts}": ["eslint --fix --quiet", "prettier --write --loglevel silent"]
   }
 }
