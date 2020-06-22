@@ -8,6 +8,9 @@ export class AuthorizationMiddleware implements ExpressMiddlewareInterface {
       return res.status(403).send({ error: { message: 'Not Authorized.' } });
 
     req.token = AccessToken.verify(req.headers.Authorization.replace('Token ', ''));
+
+    if (!req.token.verified) return res.status(403).send({ error: { message: 'Not Authorized.' } });
+
     next();
   }
 }
