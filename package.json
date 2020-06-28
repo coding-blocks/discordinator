@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "ts-node app.ts",
+    "dev": "nodemon -V -w './**/*.ts' -i './**/*.spec.ts' -x 'ts-node' app.ts",
     "eslint": "eslint '*/**/*.{js,ts}' --quiet --fix",
     "prettier": "prettier --write '*/**/*.{js,ts}' --loglevel silent",
     "lint": "yarn eslint && yarn prettier",
@@ -8,6 +9,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "camel-case": "^4.1.1",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
     "compression": "^1.7.4",
@@ -16,8 +18,10 @@
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
     "pg": "^7.3.0",
+    "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.10",
     "routing-controllers": "^0.9.0-alpha.4",
+    "snake-case": "^3.0.3",
     "typeorm": "0.2.25",
     "typeorm-routing-controllers-extensions": "^0.2.0",
     "uuid": "^8.1.0"
@@ -35,6 +39,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "module-alias": "^2.2.2",
+    "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "ts-node": "3.3.0",
     "typescript": "^3.9.5"

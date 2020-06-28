@@ -1,25 +1,47 @@
 import { BaseEntity } from './BaseEntity';
-import { Column, Index, Check } from 'typeorm';
+import { Column, Index, Check, AfterInsert, AfterLoad, AfterUpdate } from 'typeorm';
+import { IsDefined, IsInt, Min, IsDate, IsOptional } from 'class-validator';
 
 export abstract class DiscordEntity extends BaseEntity {
   @Index({ unique: true })
-  @Column()
+  @Column({ nullable: true })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
   discordId: string;
 
   @Column({ nullable: true })
   @Check('"discordSyncedAt" IS NULL OR "discordSyncTriedAt" IS NOT NULL')
+  @IsDate()
+  @IsOptional()
   discordSyncedAt: Date;
 
   @Column({ nullable: true })
+  @IsDate()
+  @IsOptional()
   discordSyncTriedAt: Date;
 
-  abstract get name(): Promise<string> | string;
+  name: string;
 
-  get synced(): boolean {
-    if (this.discordSyncedAt === null) return false;
+  abstract getName(): string;
 
-    if (this.discordSyncTriedAt > this.discordSyncedAt) return false;
+  @AfterLoad()
+  @AfterUpdate()
+  setName() {
+    this.name = this.getName();
+  }
 
-    return true;
+  synced: boolean;
+
+  @AfterLoad()
+  @AfterUpdate()
+  setSynced() {
+    let synced = true;
+
+    if (this.discordSyncedAt === null) synced = false;
+    if (this.discordSyncTriedAt > this.discordSyncedAt) synced = false;
+    if (this.updatedAt > this.discordSyncedAt) synced = false;
+
+    this.synced = synced;
   }
 }

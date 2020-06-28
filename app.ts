@@ -26,6 +26,7 @@ const start = async () => {
     routePrefix: '/api',
     controllers: [__dirname + '/controllers/**/*.ts'],
     middlewares: [AuthorizationMiddleware],
+    validation: true,
   });
 
   app.listen(config.app.port, config.app.host, async () => {

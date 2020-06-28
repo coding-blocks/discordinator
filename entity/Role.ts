@@ -1,8 +1,18 @@
-import { Entity, Column, ManyToOne, ManyToMany, OneToMany, Index } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  ManyToMany,
+  OneToMany,
+  Index,
+  JoinColumn,
+} from 'typeorm';
 import { User } from './User';
-import { UserRolesRole } from './UserRolesRole';
+import { UserRole } from './UserRole';
 import { Channel, ChannelKind } from './Channel';
 import { DiscordEntity } from './concerns/DiscordEntity';
+import { IsDefined, IsNotEmpty, IsInt, IsEnum } from 'class-validator';
 
 export enum RoleKind {
   STUDENT = 'Student',
@@ -10,28 +20,42 @@ export enum RoleKind {
 }
 
 @Entity()
+@Index(['kind', 'channel'], { unique: true })
 export class Role extends DiscordEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column({ type: 'enum', enum: RoleKind })
+  @IsDefined()
+  @IsNotEmpty()
+  @IsEnum(RoleKind)
   kind: RoleKind;
 
-  @ManyToOne('Channel', 'roles', { eager: true })
+  @ManyToOne('Channel', 'roles', { eager: true, nullable: false })
   channel: Channel;
+
+  @IsDefined()
+  @IsInt()
+  channelId: number;
 
   @ManyToMany('User', 'roles')
   users: User[];
 
-  @OneToMany('UserRolesRole', 'role')
-  roleUsers: UserRolesRole[];
+  @OneToMany('UserRole', 'role')
+  roleUsers: UserRole[];
 
-  get name(): string {
-    return Role.getName({ kind: this.kind, channel: this.channel });
+  getName(): string {
+    return this.name || (this.name = Role.getName({ kind: this.kind, channel: this.channel }));
   }
 
   static getName({ kind, channel }: { kind: RoleKind; channel: Channel }): string {
     if (channel.kind === ChannelKind.LOBBY) return `${kind}/${channel.courseCode}`.toUpperCase();
 
-    if (channel.kind === ChannelKind.BATCH) return `${kind}/${channel.name}`.toUpperCase();
+    if (channel.kind === ChannelKind.BATCH)
+      return `${kind}/${Channel.getName(channel)}`.toUpperCase();
 
     return '';
   }
+
+  static RoleKind = RoleKind;
 }

@@ -1,4 +1,12 @@
-import { Entity, Column, OneToMany, Check } from 'typeorm';
+import {
+  Entity,
+  Index,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  OneToMany,
+  Check,
+} from 'typeorm';
 import { Role } from './Role';
 import { DiscordEntity } from './concerns/DiscordEntity';
 
@@ -8,7 +16,11 @@ export enum ChannelKind {
 }
 
 @Entity()
+@Index(['kind', 'courseKind', 'courseCode', 'batchCode'], { unique: true })
 export class Channel extends DiscordEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column({ type: 'enum', enum: ChannelKind })
   kind: ChannelKind;
 
@@ -23,16 +35,20 @@ export class Channel extends DiscordEntity {
   @Check(`"kind" != '${ChannelKind.BATCH}' OR "batchCode" IS NOT NULL`)
   batchCode: string;
 
-  @OneToMany('Role', 'channel')
+  @OneToMany('Role', 'channel', { cascade: true })
+  @JoinColumn()
   roles: Role[];
 
-  get name(): string {
-    return Channel.getName({
-      kind: this.kind,
-      courseCode: this.courseCode,
-      courseKind: this.courseKind,
-      batchCode: this.batchCode,
-    });
+  getName(): string {
+    return (
+      this.name ||
+      (this.name = Channel.getName({
+        kind: this.kind,
+        courseCode: this.courseCode,
+        courseKind: this.courseKind,
+        batchCode: this.batchCode,
+      }))
+    );
   }
 
   static getName({
@@ -46,7 +62,7 @@ export class Channel extends DiscordEntity {
     courseKind?: string;
     batchCode?: string;
   }): string {
-    if (kind === ChannelKind.BATCH) return `${courseKind}${courseCode}${batchCode}`.toUpperCase();
+    if (kind === ChannelKind.BATCH) return `${courseKind}-${courseCode}-${batchCode}`.toUpperCase();
     if (kind === ChannelKind.LOBBY) return `lobby-${courseCode}`.toUpperCase();
 
     return '';
