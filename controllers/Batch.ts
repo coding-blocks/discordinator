@@ -1,4 +1,4 @@
-import { JsonController, Param, Body, Post, Delete, OnUndefined } from 'routing-controllers';
+import { JsonController, Body, Post, Delete, OnUndefined } from 'routing-controllers';
 import { Role, RoleKind } from '~/entity/Role';
 import { Channel, ChannelKind } from '~/entity/Channel';
 

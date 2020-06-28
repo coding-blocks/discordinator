@@ -15,6 +15,8 @@ export class UserRole extends DiscordEntity {
   role: Role;
 
   getName(): string {
-    return this.role.getName();
+    if (!this.role || !this.role.channel) return '';
+
+    return Role.getName({ kind: this.role.kind, channel: this.role.channel });
   }
 }
