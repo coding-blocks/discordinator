@@ -9,7 +9,7 @@ import {
   Delete,
   OnUndefined,
 } from 'routing-controllers';
-import { NotFoundError } from './errors/NotFound';
+import { NotFoundError } from '~/controllers/errors/NotFound';
 import { User, UserIdKind } from '~/entity/User';
 import { UserRole } from '~/entity/UserRole';
 import { Role } from '~/entity/Role';

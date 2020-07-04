@@ -24,8 +24,14 @@ const start = async () => {
   // add controllers
   useExpressServer(app, {
     routePrefix: '/api',
-    controllers: [__dirname + '/controllers/**/*.ts'],
+    controllers: [__dirname + '/controllers/api/**/*.ts'],
     middlewares: [AuthorizationMiddleware],
+    validation: true,
+  });
+
+  useExpressServer(app, {
+    routePrefix: '/app',
+    controllers: [__dirname + '/controllers/app/**/*.ts'],
     validation: true,
   });
 

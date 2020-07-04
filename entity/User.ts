@@ -9,6 +9,7 @@ import {
   FindManyOptions,
 } from 'typeorm';
 import { Role } from './Role';
+import * as moment from 'moment';
 import { UserRole } from './UserRole';
 import { DiscordEntity } from './concerns/DiscordEntity';
 import { IsDefined, IsInt, Min } from 'class-validator';
@@ -47,6 +48,14 @@ export class User extends DiscordEntity {
 
   getName(): string {
     return '';
+  }
+
+  setDiscordId(value: string) {
+    const now = new Date(moment().utc().format());
+
+    this.discordId = value;
+    this.discordSyncedAt = now;
+    this.discordSyncTriedAt = now;
   }
 
   static async findById(id: number, kind: UserIdKind = 'id', options: FindManyOptions<User> = {}) {

@@ -13,9 +13,9 @@ import { User } from '~/entity/User';
 import { FindManyOptions } from 'typeorm';
 import { UserRole } from '~/entity/UserRole';
 import { Role, RoleKind } from '~/entity/Role';
-import { NotFoundError } from './errors/NotFound';
 import { belongsToEnum } from '~/utils/belongsToEnum';
 import { Channel, ChannelKind } from '~/entity/Channel';
+import { NotFoundError } from '~/controllers/errors/NotFound';
 
 @JsonController('/roles')
 export class RoleController {

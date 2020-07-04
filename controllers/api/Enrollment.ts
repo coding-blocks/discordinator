@@ -1,6 +1,6 @@
 import { JsonController, BodyParam, Post, Delete, OnUndefined } from 'routing-controllers';
 import { IsDefined, IsInt, IsString, IsNotEmpty } from 'class-validator';
-import { NotFoundError } from './errors/NotFound';
+import { NotFoundError } from '~/controllers/errors/NotFound';
 import { User, UserIdKind } from '~/entity/User';
 import { Role, RoleKind } from '~/entity/Role';
 import { UserRole } from '~/entity/UserRole';
@@ -27,8 +27,8 @@ export class OldUserEnrollment {
   kind: UserIdKind;
 }
 
-@JsonController('/assistants')
-export class AssistantController {
+@JsonController('/enrollments')
+export class EnrollmentController {
   @Post('/')
   @OnUndefined(NotFoundError)
   async post(
@@ -41,8 +41,8 @@ export class AssistantController {
     const channels = await Channel.find({ where: { courseKind, courseCode, batchCode } });
     if (!channels.length) return;
 
-    const assistantRoles = await Role.find({
-      where: { kind: RoleKind.ASSISTANT, channel: In(channels.map((channel) => channel.id)) },
+    const studentRoles = await Role.find({
+      where: { kind: RoleKind.STUDENT, channel: In(channels.map((channel) => channel.id)) },
       relations: ['channel'],
     });
 
@@ -62,7 +62,7 @@ export class AssistantController {
     if (!user) return;
 
     const roles = await Promise.all(
-      assistantRoles.map((role) => new UserRole({ user, role }).save()),
+      studentRoles.map((role) => new UserRole({ user, role }).save()),
     );
 
     return { channels, roles, user };

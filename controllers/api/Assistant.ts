@@ -27,8 +27,8 @@ export class OldUserEnrollment {
   kind: UserIdKind;
 }
 
-@JsonController('/enrollments')
-export class EnrollmentController {
+@JsonController('/assistants')
+export class AssistantController {
   @Post('/')
   @OnUndefined(NotFoundError)
   async post(
@@ -41,8 +41,8 @@ export class EnrollmentController {
     const channels = await Channel.find({ where: { courseKind, courseCode, batchCode } });
     if (!channels.length) return;
 
-    const studentRoles = await Role.find({
-      where: { kind: RoleKind.STUDENT, channel: In(channels.map((channel) => channel.id)) },
+    const assistantRoles = await Role.find({
+      where: { kind: RoleKind.ASSISTANT, channel: In(channels.map((channel) => channel.id)) },
       relations: ['channel'],
     });
 
@@ -62,7 +62,7 @@ export class EnrollmentController {
     if (!user) return;
 
     const roles = await Promise.all(
-      studentRoles.map((role) => new UserRole({ user, role }).save()),
+      assistantRoles.map((role) => new UserRole({ user, role }).save()),
     );
 
     return { channels, roles, user };

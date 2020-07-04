@@ -12,9 +12,9 @@ import {
 import { User } from '~/entity/User';
 import { FindManyOptions } from 'typeorm';
 import { Role, RoleKind } from '~/entity/Role';
-import { NotFoundError } from './errors/NotFound';
 import { belongsToEnum } from '~/utils/belongsToEnum';
 import { Channel, ChannelKind } from '~/entity/Channel';
+import { NotFoundError } from '~/controllers/errors/NotFound';
 import { DEFAULT_PAGINATION_LIMIT } from '~/entity/concerns/BaseEntity';
 
 @JsonController('/channels')
