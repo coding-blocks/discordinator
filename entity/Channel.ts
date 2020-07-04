@@ -35,7 +35,7 @@ export class Channel extends DiscordEntity {
   @Check(`"kind" != '${ChannelKind.BATCH}' OR "batchCode" IS NOT NULL`)
   batchCode: string;
 
-  @OneToMany('Role', 'channel', { cascade: true })
+  @OneToMany('Role', 'channel', { cascade: true, onDelete: 'CASCADE' })
   @JoinColumn()
   roles: Role[];
 

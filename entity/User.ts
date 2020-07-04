@@ -42,7 +42,7 @@ export class User extends DiscordEntity {
   })
   roles: Role[];
 
-  @OneToMany('UserRole', 'user')
+  @OneToMany('UserRole', 'user', { onDelete: 'CASCADE' })
   userRoles: UserRole[];
 
   getName(): string {

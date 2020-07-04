@@ -41,7 +41,7 @@ export class Role extends DiscordEntity {
   @ManyToMany('User', 'roles')
   users: User[];
 
-  @OneToMany('UserRole', 'role')
+  @OneToMany('UserRole', 'role', { onDelete: 'CASCADE' })
   roleUsers: UserRole[];
 
   getName(): string {
