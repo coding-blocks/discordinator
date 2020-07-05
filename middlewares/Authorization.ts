@@ -1,4 +1,4 @@
-import { Middleware, ExpressMiddlewareInterface } from 'routing-controllers';
+import { ExpressMiddlewareInterface } from 'routing-controllers';
 import { AccessToken } from '~/services/AccessToken';
 
 export class AuthorizationMiddleware implements ExpressMiddlewareInterface {

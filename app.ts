@@ -7,6 +7,7 @@ import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import { createConnection } from 'typeorm';
 import { useExpressServer } from 'routing-controllers';
+import { useMiddeware } from '~/utils/useMiddeware';
 import { AuthorizationMiddleware } from '~/middlewares/Authorization';
 import config from '~/config';
 
@@ -21,13 +22,15 @@ const start = async () => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(compression());
 
-  // add controllers
+  // add api controllers
+  app.use('/api', useMiddeware(AuthorizationMiddleware));
   useExpressServer(app, {
     routePrefix: '/api',
     controllers: [__dirname + '/controllers/api/**/*.ts'],
     validation: true,
   });
 
+  // add app controllers
   useExpressServer(app, {
     routePrefix: '/app',
     controllers: [__dirname + '/controllers/app/**/*.ts'],
