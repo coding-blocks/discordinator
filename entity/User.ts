@@ -58,6 +58,13 @@ export class User extends DiscordEntity {
     this.discordSyncTriedAt = now;
   }
 
+  async updateDiscordId(value?: string): Promise<void> {
+    if (!!value && this.discordId !== value) {
+      this.setDiscordId(value);
+      await this.save();
+    }
+  }
+
   static async findById(id: number, kind: UserIdKind = 'id', options: FindManyOptions<User> = {}) {
     if (!['id', 'oneauthId', 'amoebaId'].includes(kind)) return;
 

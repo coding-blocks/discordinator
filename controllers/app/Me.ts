@@ -5,18 +5,15 @@ import { User, UserIdKind } from '~/entity/User';
 @JsonController('/me')
 export class MeController {
   @Get('/')
-  async getOne(@CookieParam('oneauth') accessToken?: string) {
-    const profile = accessToken && (await new OneAuth(accessToken).me());
-    if (!profile) return {};
+  async getOne(@CookieParam('oneauth') accessCookie?: string) {
+    const profile = accessCookie && (await new OneAuth({ accessCookie }).me());
+    if (!profile) return { user: null };
 
     const user = await User.findById(profile.id, 'oneauthId');
-    if (!user) return {};
+    if (!user) return { user: null };
 
-    if (profile.userdiscord?.id && user.discordId === null) {
-      user.setDiscordId(profile.userdiscord.id);
-      await user.save();
-    }
+    await user.updateDiscordId(profile.userdiscord?.id);
 
-    return user;
+    return { user };
   }
 }
