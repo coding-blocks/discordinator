@@ -128,12 +128,12 @@ export class OneAuth {
     return await new OneAuth({ accessToken: res.access_token }).me();
   }
 
-  static connect(oneauthId): string {
+  static connect(): string {
     return (
       config.oneauth.url +
       '/connect/discord' +
       query({
-        returnTo: config.app.url + '/app/connect/success/' + oneauthId,
+        returnTo: config.app.url + '/app/connect/',
       })
     );
   }
