@@ -1,4 +1,6 @@
 {
+  "name": "discordinator",
+  "license": "GPL-3.0-only",
   "scripts": {
     "start": "ts-node app.ts",
     "dev": "nodemon -V -w './**/*.ts' -i './**/*.spec.ts' -x 'ts-node' app.ts",
@@ -13,11 +15,13 @@
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
     "compression": "^1.7.4",
+    "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.27.0",
     "multer": "^1.4.2",
+    "node-cron": "^2.0.3",
     "node-fetch": "^2.6.0",
     "pg": "^7.3.0",
     "pluralize": "^8.0.0",

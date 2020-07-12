@@ -12,7 +12,7 @@ import { Role } from './Role';
 import * as moment from 'moment';
 import { UserRole } from './UserRole';
 import { DiscordEntity } from './concerns/DiscordEntity';
-import { IsDefined, IsInt, Min } from 'class-validator';
+import { IsDefined, IsOptional, IsInt, IsString, Min } from 'class-validator';
 
 export type UserIdKind = 'id' | 'oneauthId' | 'amoebaId';
 
@@ -34,6 +34,12 @@ export class User extends DiscordEntity {
   @IsInt()
   @Min(0)
   amoebaId: number;
+
+  @Column({ nullable: true })
+  @IsString()
+  @Min(0)
+  @IsOptional()
+  refreshToken: string;
 
   @ManyToMany('Role', 'users', {
     cascade: true,

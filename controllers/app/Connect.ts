@@ -34,8 +34,10 @@ export class ConnectController {
     @CookieParam('oneauth') accessCookie?: string,
     @QueryParam('returnTo') returnTo?: string,
   ) {
-    const profile = accessCookie && (await new OneAuth({ accessCookie }).me());
-    if (!profile) return OneAuth.login();
+    const oneAuthUser = accessCookie && (await new OneAuth({ accessCookie }).me());
+    if (!oneAuthUser) return OneAuth.login();
+
+    const profile = await OneAuth.getProfile(oneAuthUser.id);
 
     const session = sessions.get(profile.id);
     const redirect = returnTo || session?.returnTo;
@@ -48,7 +50,10 @@ export class ConnectController {
     const user = await User.findById(profile.id, 'oneauthId');
     if (!user) return redirect;
 
-    await user.updateDiscordId(profile.userdiscord?.id);
+    if (!user.discordId) {
+      user.refreshToken = profile.userdiscord.refreshToken;
+      await user.updateDiscordId(profile.userdiscord?.id);
+    }
 
     return redirect;
   }
@@ -70,7 +75,10 @@ export class ConnectController {
 
     if (!profile.userdiscord?.id) return OneAuth.connect();
 
-    await user.updateDiscordId(profile.userdiscord?.id);
+    if (!user.discordId) {
+      user.refreshToken = profile.userdiscord.refreshToken;
+      await user.updateDiscordId(profile.userdiscord?.id);
+    }
 
     return sessions.get(profile.id)?.returnTo;
   }

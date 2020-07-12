@@ -3,6 +3,7 @@ dotenv.config();
 import 'reflect-metadata';
 import 'module-alias/register';
 import * as express from 'express';
+import { Cron } from '~/services/Cron';
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import { createConnection } from 'typeorm';
@@ -40,6 +41,8 @@ const start = async () => {
   app.listen(config.app.port, config.app.host, async () => {
     console.log(`Started server at http://${config.app.host}:${config.app.port}`);
   });
+
+  config.cron.enabled && Cron.initialize();
 };
 
 start();

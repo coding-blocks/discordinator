@@ -12,8 +12,6 @@ export class MeController {
     const user = await User.findById(profile.id, 'oneauthId');
     if (!user) return { user: null };
 
-    await user.updateDiscordId(profile.userdiscord?.id);
-
     return { user };
   }
 }
