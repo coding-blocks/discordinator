@@ -56,17 +56,18 @@ export class User extends DiscordEntity {
     return '';
   }
 
-  setDiscordId(value: string) {
+  setDiscord(id: string = this.discordId, refreshToken: string = this.refreshToken) {
     const now = new Date(moment().utc().format());
 
-    this.discordId = value;
+    this.discordId = id;
+    this.refreshToken = refreshToken;
     this.discordSyncedAt = now;
     this.discordSyncTriedAt = now;
   }
 
-  async updateDiscordId(value?: string): Promise<void> {
-    if (!!value && this.discordId !== value) {
-      this.setDiscordId(value);
+  async updateDiscord(id?: string, refreshToken?: string): Promise<void> {
+    if (!!id && id !== this.discordId) {
+      this.setDiscord(id, refreshToken);
       await this.save();
     }
   }

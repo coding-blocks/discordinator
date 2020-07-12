@@ -51,8 +51,8 @@ export class ConnectController {
     if (!user) return redirect;
 
     if (!user.discordId) {
-      user.refreshToken = profile.userdiscord.refreshToken;
-      await user.updateDiscordId(profile.userdiscord?.id);
+      const { id, refreshToken } = profile.userdiscord;
+      await user.updateDiscord(id, refreshToken);
     }
 
     return redirect;
@@ -76,8 +76,8 @@ export class ConnectController {
     if (!profile.userdiscord?.id) return OneAuth.connect();
 
     if (!user.discordId) {
-      user.refreshToken = profile.userdiscord.refreshToken;
-      await user.updateDiscordId(profile.userdiscord?.id);
+      const { id, refreshToken } = profile.userdiscord;
+      await user.updateDiscord(id, refreshToken);
     }
 
     return sessions.get(profile.id)?.returnTo;

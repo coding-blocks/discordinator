@@ -1,6 +1,16 @@
 import { BaseEntity } from './BaseEntity';
-import { Column, Index, Check, AfterInsert, AfterLoad, AfterUpdate } from 'typeorm';
 import { IsDefined, IsInt, Min, IsDate, IsOptional } from 'class-validator';
+import {
+  Column,
+  Index,
+  Check,
+  AfterInsert,
+  AfterLoad,
+  AfterUpdate,
+  IsNull,
+  Raw,
+  FindManyOptions,
+} from 'typeorm';
 
 export abstract class DiscordEntity extends BaseEntity {
   @Index({ unique: true })
@@ -39,9 +49,24 @@ export abstract class DiscordEntity extends BaseEntity {
     let synced = true;
 
     if (this.discordSyncedAt === null) synced = false;
+    if (this.discordSyncTriedAt === null) synced = false;
     if (this.discordSyncTriedAt > this.discordSyncedAt) synced = false;
     if (this.updatedAt > this.discordSyncedAt) synced = false;
 
     this.synced = synced;
+  }
+
+  static async findAllUnSynced<T extends DiscordEntity>(
+    options: FindManyOptions<T> = {},
+  ): Promise<T[]> {
+    return ((await this.getRepository().find({
+      ...(options as object),
+      where: [
+        { discordSyncedAt: IsNull() },
+        { discordSyncTriedAt: IsNull() },
+        { updatedAt: Raw((alias) => `${alias} > "User"."discordSyncedAt"`) },
+        { discordSyncTriedAt: Raw((alias) => `${alias} > "User"."discordSyncedAt"`) },
+      ],
+    })) as any) as Promise<T[]>;
   }
 }
