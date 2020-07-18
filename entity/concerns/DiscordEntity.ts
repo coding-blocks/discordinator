@@ -1,4 +1,5 @@
 import { BaseEntity } from './BaseEntity';
+import { SyncResult } from '~/services/Sync';
 import { IsDefined, IsInt, Min, IsDate, IsOptional } from 'class-validator';
 import {
   Column,
@@ -33,6 +34,28 @@ export abstract class DiscordEntity extends BaseEntity {
 
   name: string;
 
+  async sync<T extends DiscordEntity>(cb: (T) => Promise<{ id: string } | null>): Promise<boolean> {
+    try {
+      this.discordSyncTriedAt = new Date();
+      await this.save();
+
+      const result = await cb(this);
+
+      if (result && !!result.id) {
+        this.discordId = result.id;
+        this.updatedAt = new Date();
+        this.discordSyncedAt = new Date();
+        await this.save();
+
+        return true;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    return false;
+  }
+
   abstract getName(): string;
 
   @AfterLoad()
@@ -45,7 +68,7 @@ export abstract class DiscordEntity extends BaseEntity {
 
   @AfterLoad()
   @AfterUpdate()
-  setSynced() {
+  reloadSyncStatus() {
     let synced = true;
 
     if (this.discordSyncedAt === null) synced = false;

@@ -38,8 +38,9 @@ export class ConnectController {
     if (!oneAuthUser) return OneAuth.login();
 
     const profile = await OneAuth.getProfile(oneAuthUser.id);
+    if (!profile) return OneAuth.login();
 
-    const session = sessions.get(profile.id);
+    const session = sessions.get(profile?.id);
     const redirect = returnTo || session?.returnTo;
 
     if (!profile.userdiscord?.id) {

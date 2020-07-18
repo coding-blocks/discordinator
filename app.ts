@@ -11,12 +11,18 @@ import { useExpressServer } from 'routing-controllers';
 import { useMiddeware } from '~/utils/useMiddeware';
 import { AuthorizationMiddleware } from '~/middlewares/Authorization';
 import config from '~/config';
+import { Discord } from '~/services/Discord';
 
 const start = async () => {
   const app = express();
 
   // db connection
   await createConnection();
+  console.log('Database connection established.');
+
+  // init discord client
+  await Discord.initialize();
+  console.log('Discord client initialized.');
 
   // middewares
   app.use(bodyParser.json());

@@ -19,6 +19,21 @@ export enum RoleKind {
   ASSISTANT = 'Assistant',
 }
 
+export const RolePermissions = {
+  [RoleKind.STUDENT]: ['SEND_MESSAGES', 'VIEW_CHANNEL', 'ATTACH_FILES', 'EMBED_LINKS'],
+  [RoleKind.ASSISTANT]: [
+    'KICK_MEMBERS',
+    'BAN_MEMBERS',
+    'MANAGE_MESSAGES',
+    'SEND_MESSAGES',
+    'VIEW_CHANNEL',
+    'ADD_REACTIONS',
+    'ATTACH_FILES',
+    'MENTION_EVERYONE',
+    'EMBED_LINKS',
+  ],
+};
+
 @Entity()
 @Index(['kind', 'channel'], { unique: true })
 export class Role extends DiscordEntity {

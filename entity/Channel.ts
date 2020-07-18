@@ -15,6 +15,13 @@ export enum ChannelKind {
   LOBBY = 'LobbyChannel',
 }
 
+interface IGetNameProps {
+  kind: ChannelKind;
+  courseCode: string;
+  courseKind?: string;
+  batchCode?: string;
+}
+
 @Entity()
 @Index(['kind', 'courseKind', 'courseCode', 'batchCode'], { unique: true })
 export class Channel extends DiscordEntity {
@@ -40,28 +47,11 @@ export class Channel extends DiscordEntity {
   roles: Role[];
 
   getName(): string {
-    return (
-      this.name ||
-      (this.name = Channel.getName({
-        kind: this.kind,
-        courseCode: this.courseCode,
-        courseKind: this.courseKind,
-        batchCode: this.batchCode,
-      }))
-    );
+    const { kind, courseCode, courseKind, batchCode } = this;
+    return this.name || (this.name = Channel.getName({ kind, courseCode, courseKind, batchCode }));
   }
 
-  static getName({
-    kind,
-    courseCode,
-    courseKind,
-    batchCode,
-  }: {
-    kind: ChannelKind;
-    courseCode: string;
-    courseKind?: string;
-    batchCode?: string;
-  }): string {
+  static getName({ kind, courseCode, courseKind, batchCode }: IGetNameProps): string {
     if (kind === ChannelKind.BATCH) return `${courseKind}-${courseCode}-${batchCode}`.toUpperCase();
     if (kind === ChannelKind.LOBBY) return `lobby-${courseCode}`.toUpperCase();
 

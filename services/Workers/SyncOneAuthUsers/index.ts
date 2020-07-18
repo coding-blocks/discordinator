@@ -11,7 +11,7 @@ export class SyncOneAuthUsers extends Worker {
     return users.map(async (user) => {
       const profile = await OneAuth.getProfile(user.oneauthId);
 
-      if (profile.userdiscord) {
+      if (profile?.userdiscord) {
         const { id, refreshToken } = profile.userdiscord;
         await user.updateDiscord(id, refreshToken);
       }

@@ -61,8 +61,6 @@ export class User extends DiscordEntity {
 
     this.discordId = id;
     this.refreshToken = refreshToken;
-    this.discordSyncedAt = now;
-    this.discordSyncTriedAt = now;
   }
 
   async updateDiscord(id?: string, refreshToken?: string): Promise<void> {

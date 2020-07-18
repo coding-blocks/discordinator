@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["es5", "es6", "es2015", "es2016", "es2017", "es2018", "es2019", "es2020"],
+    "typeRoots": ["./node_modules/@types", "./node_modules/discord.js/typings"],
     "target": "es2015",
     "module": "commonjs",
     "moduleResolution": "node",

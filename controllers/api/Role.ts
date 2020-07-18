@@ -6,7 +6,6 @@ import {
   Body,
   Get,
   Post,
-  Delete,
   OnUndefined,
 } from 'routing-controllers';
 import { User } from '~/entity/User';

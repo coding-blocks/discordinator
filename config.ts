@@ -11,9 +11,11 @@ export default {
     clientSecret: process.env.ONEAUTH_CLIENT_SECRET,
   },
   discord: {
+    guildId: process.env.DISCORD_GUILD_ID,
     botToken: process.env.DISCORD_BOT_TOKEN,
     clientId: process.env.DISCORD_CLIENT_ID,
     clientSecret: process.env.DISCORD_CLIENT_SECRET,
+    scopes: ['identify', 'email', 'guilds.join', 'gdm.join'],
   },
   cron: {
     enabled: process.env.CRON_ENABLED === 'true',
