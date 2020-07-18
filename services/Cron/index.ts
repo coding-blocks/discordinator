@@ -1,14 +1,18 @@
 import * as cron from 'node-cron';
-import { Worker } from '~/services/Workers';
-import { SyncOneAuthUsers } from '~/services/Workers/SyncOneAuthUsers';
+import { Worker } from '~/Workers';
+import { SyncOneAuthUsers } from '~/Workers/SyncOneAuthUsers';
+import { SyncDiscordUsers } from '~/Workers/SyncDiscordUsers';
 
 export class Cron {
   static Jobs: { [time: string]: typeof Worker[] } = {
     // every minute
-    '*/1 * * * *': [SyncOneAuthUsers],
+    '*/1 * * * *': [SyncDiscordUsers],
 
     // every 5 minutes
     '*/5 * * * *': [],
+
+    // every 5 minutes
+    '*/10 * * * *': [SyncOneAuthUsers],
   };
 
   static initialize() {

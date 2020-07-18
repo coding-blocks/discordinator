@@ -75,8 +75,13 @@ export abstract class DiscordEntity extends BaseEntity {
     if (this.discordSyncTriedAt === null) synced = false;
     if (this.discordSyncTriedAt > this.discordSyncedAt) synced = false;
     if (this.updatedAt > this.discordSyncedAt) synced = false;
+    if (this.deletedAt > this.discordSyncedAt) synced = false;
 
     this.synced = synced;
+  }
+
+  get deleted(): boolean {
+    return !!this.deletedAt;
   }
 
   static async findAllUnSynced<T extends DiscordEntity>(
@@ -88,6 +93,7 @@ export abstract class DiscordEntity extends BaseEntity {
         { discordSyncedAt: IsNull() },
         { discordSyncTriedAt: IsNull() },
         { updatedAt: Raw((alias) => `${alias} > "User"."discordSyncedAt"`) },
+        { deletedAt: Raw((alias) => `${alias} > "User"."discordSyncedAt"`) },
         { discordSyncTriedAt: Raw((alias) => `${alias} > "User"."discordSyncedAt"`) },
       ],
     })) as any) as Promise<T[]>;

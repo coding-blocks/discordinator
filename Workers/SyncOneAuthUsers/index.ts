@@ -1,12 +1,13 @@
+import { IsNull } from 'typeorm';
+import { Worker } from '~/Workers';
 import { User } from '~/entity/User';
 import { OneAuth } from '~/services/OneAuth';
-import { Worker } from '~/services/Workers';
 
 export class SyncOneAuthUsers extends Worker {
   name = 'SyncOneAuthUsers';
 
   async run() {
-    const users = await User.findAllUnSynced<User>();
+    const users = await User.find({ where: [{ discordId: IsNull() }, { refreshToken: IsNull() }] });
 
     return users.map(async (user) => {
       const profile = await OneAuth.getProfile(user.oneauthId);
