@@ -14,11 +14,17 @@ export class Sync {
 
   // Role
 
-  static addRole = async (role: Role): SyncResult =>
-    !!role.channel.synced &&
-    role.sync<Role>(() =>
-      Discord.createRole(role.channel.discordId, role.name, RolePermissions[role.kind]),
+  static addRole = async (role: Role): SyncResult => {
+    const channel = role.channel || (await Channel.findOne(role.channelId));
+
+    return (
+      channel &&
+      !!channel.synced &&
+      role.sync<Role>(() =>
+        Discord.createRole(channel.discordId, role.name, RolePermissions[role.kind]),
+      )
     );
+  };
 
   static removeRole = async (role: Role): SyncResult =>
     role.sync<Role>(() => Discord.deleteRole(role.discordId));

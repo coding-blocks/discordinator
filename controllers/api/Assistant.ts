@@ -62,7 +62,13 @@ export class AssistantController {
     if (!user) return;
 
     const roles = await Promise.all(
-      assistantRoles.map((role) => new UserRole({ user, role }).save()),
+      assistantRoles.map(async (role) => {
+        const userRole =
+          (await UserRole.find({ user, role }))[0] || (await new UserRole({ user, role }).save());
+        await userRole.restore();
+
+        return userRole;
+      }),
     );
 
     return { channels, roles, user };

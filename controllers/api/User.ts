@@ -9,6 +9,7 @@ import {
   Delete,
   OnUndefined,
 } from 'routing-controllers';
+import { IsNull } from 'typeorm';
 import { NotFoundError } from '~/controllers/errors/NotFound';
 import { User, UserIdKind } from '~/entity/User';
 import { UserRole } from '~/entity/UserRole';
@@ -47,7 +48,7 @@ export class UserController {
     const user = await User.findById(id, kind);
     if (!user) return;
 
-    const roles = await UserRole.find({ where: { user } });
+    const roles = await UserRole.find({ where: { user, deletedAt: IsNull() } });
 
     return { roles };
   }
@@ -65,9 +66,10 @@ export class UserController {
     ]);
     if (!user || !role) return;
 
-    const [userRole] = await UserRole.find({ where: { user, role } });
+    const [userRole] = await UserRole.find({ user, role, deletedAt: IsNull() });
     if (!userRole) return;
-    await UserRole.getRepository().softDelete({ user, role });
+
+    await userRole.softDelete();
 
     return { role: userRole };
   }
@@ -81,8 +83,8 @@ export class UserController {
     const role = await Role.findOne(roleId);
     if (!role) return;
 
-    await UserRole.getRepository().restore({ user, role });
     const userRole = await new UserRole({ user, role }).save();
+    await userRole.restore();
 
     return { userRole };
   }

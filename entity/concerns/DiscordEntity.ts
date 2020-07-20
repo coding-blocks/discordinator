@@ -87,14 +87,16 @@ export abstract class DiscordEntity extends BaseEntity {
   static async findAllUnSynced<T extends DiscordEntity>(
     options: FindManyOptions<T> = {},
   ): Promise<T[]> {
+    const { name: tableName } = this.getRepository().metadata;
+
     return ((await this.getRepository().find({
       ...(options as object),
       where: [
         { discordSyncedAt: IsNull() },
         { discordSyncTriedAt: IsNull() },
-        { updatedAt: Raw((alias) => `${alias} > "User"."discordSyncedAt"`) },
-        { deletedAt: Raw((alias) => `${alias} > "User"."discordSyncedAt"`) },
-        { discordSyncTriedAt: Raw((alias) => `${alias} > "User"."discordSyncedAt"`) },
+        { updatedAt: Raw((alias) => `${alias} > "${tableName}"."discordSyncedAt"`) },
+        { deletedAt: Raw((alias) => `${alias} > "${tableName}"."discordSyncedAt"`) },
+        { discordSyncTriedAt: Raw((alias) => `${alias} > "${tableName}"."discordSyncedAt"`) },
       ],
     })) as any) as Promise<T[]>;
   }

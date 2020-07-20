@@ -20,7 +20,13 @@ export enum RoleKind {
 }
 
 export const RolePermissions = {
-  [RoleKind.STUDENT]: ['SEND_MESSAGES', 'VIEW_CHANNEL', 'ATTACH_FILES', 'EMBED_LINKS'],
+  [RoleKind.STUDENT]: [
+    'SEND_MESSAGES',
+    'VIEW_CHANNEL',
+    'ATTACH_FILES',
+    'EMBED_LINKS',
+    'READ_MESSAGE_HISTORY',
+  ],
   [RoleKind.ASSISTANT]: [
     'KICK_MEMBERS',
     'BAN_MEMBERS',
@@ -31,6 +37,7 @@ export const RolePermissions = {
     'ATTACH_FILES',
     'MENTION_EVERYONE',
     'EMBED_LINKS',
+    'READ_MESSAGE_HISTORY',
   ],
 };
 
@@ -63,7 +70,9 @@ export class Role extends DiscordEntity {
     return this.name || (this.name = Role.getName({ kind: this.kind, channel: this.channel }));
   }
 
-  static getName({ kind, channel }: { kind: RoleKind; channel: Channel }): string {
+  static getName({ kind, channel }: { kind: RoleKind; channel?: Channel }): string {
+    if (!channel) return '';
+
     if (channel.kind === ChannelKind.LOBBY) return `${kind}/${channel.courseCode}`.toUpperCase();
 
     if (channel.kind === ChannelKind.BATCH)

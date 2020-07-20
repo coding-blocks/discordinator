@@ -8,20 +8,36 @@ export class BatchController {
   async post(@Body() body: { courseCode: string; courseKind: string; batchCode: string }) {
     const { courseKind, courseCode, batchCode } = body;
 
-    const channels = await Promise.all(
-      Object.values(ChannelKind).map(async (kind) => {
-        const channel = new Channel({
-          kind,
+    const createLobbyChannel = async (): Promise<Channel> =>
+      Channel.findOrCreateAndRestore(
+        { where: { kind: ChannelKind.LOBBY, courseCode }, relations: ['roles'] },
+        {
+          kind: ChannelKind.LOBBY,
+          courseCode,
+          roles: Object.values(RoleKind).map((roleKind) => new Role({ kind: roleKind })),
+        },
+      );
+
+    const createBatchChannel = async (): Promise<Channel> =>
+      Channel.findOrCreateAndRestore(
+        {
+          where: { kind: ChannelKind.BATCH, courseKind, courseCode, batchCode },
+          relations: ['roles'],
+        },
+        {
+          kind: ChannelKind.BATCH,
           courseKind,
           courseCode,
           batchCode,
           roles: Object.values(RoleKind).map((roleKind) => new Role({ kind: roleKind })),
-        });
+        },
+      );
 
-        await channel.save();
-
-        channel.roles.forEach((role) => (role.name = Role.getName({ kind: role.kind, channel })));
+    const channels = await Promise.all(
+      [await createLobbyChannel(), await createBatchChannel()].map(async (channel) => {
+        await channel;
         channel.setName();
+        channel.roles.forEach((role) => (role.name = Role.getName({ kind: role.kind, channel })));
 
         return channel;
       }),

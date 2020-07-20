@@ -36,10 +36,16 @@ export class Channel extends DiscordEntity {
 
   @Column({ nullable: true })
   @Check(`"kind" != '${ChannelKind.BATCH}' OR "courseKind" IS NOT NULL`)
+  @Check(
+    `"kind" != '${ChannelKind.LOBBY}' OR ("kind" = '${ChannelKind.LOBBY}' AND "courseKind" IS NULL)`,
+  )
   courseKind: string;
 
   @Column({ nullable: true })
   @Check(`"kind" != '${ChannelKind.BATCH}' OR "batchCode" IS NOT NULL`)
+  @Check(
+    `"kind" != '${ChannelKind.LOBBY}' OR ("kind" = '${ChannelKind.LOBBY}' AND "batchCode" IS NULL)`,
+  )
   batchCode: string;
 
   @OneToMany('Role', 'channel', { cascade: true, onDelete: 'CASCADE' })

@@ -1,11 +1,14 @@
 import {
   BaseEntity as Base,
   Entity,
+  Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   FindManyOptions,
+  FindOneOptions,
+  DeepPartial,
 } from 'typeorm';
 import { plural } from 'pluralize';
 import { ObjectType } from '~/types';
@@ -43,13 +46,27 @@ export abstract class BaseEntity extends Base {
   @IsOptional()
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @Column({ type: 'timestamp', nullable: true })
   @IsDate()
   @IsOptional()
   deletedAt: Date;
 
   set(props: { [key: string]: any }): void {
     Object.assign(this, props);
+  }
+
+  // NOTE(naman): repository.softDelete does not emit UpdateEvent
+  async softDelete(): Promise<any> {
+    if (!!this.deletedAt) return;
+    this.deletedAt = new Date();
+    return await this.save();
+  }
+
+  // NOTE(naman): repository.restore does not emit UpdateEvent
+  async restore(): Promise<any> {
+    if (!this.deletedAt) return;
+    this.deletedAt = null;
+    return await this.save();
   }
 
   static async paginate<T extends Base>(
@@ -73,5 +90,17 @@ export abstract class BaseEntity extends Base {
       total,
       skipped: skip,
     };
+  }
+
+  static async findOrCreateAndRestore<T extends BaseEntity>(
+    this: ObjectType<T>,
+    findOptions: FindManyOptions<T>,
+    data: DeepPartial<T>,
+  ) {
+    const entity =
+      (await (this as any).find(findOptions))[0] || (await new (this as any)(data).save());
+    await entity.restore();
+
+    return entity;
   }
 }

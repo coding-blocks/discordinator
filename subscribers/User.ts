@@ -1,5 +1,6 @@
 import { User } from '~/entity/User';
 import { Sync } from '~/services/Sync';
+import { didUpdate } from '~/subscribers/utils';
 import { EventSubscriber, InsertEvent, UpdateEvent, EntitySubscriberInterface } from 'typeorm';
 
 @EventSubscriber()
@@ -13,8 +14,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
   }
 
   afterUpdate(event: UpdateEvent<User>) {
-    if (event.updatedColumns.find(({ propertyName }) => propertyName === 'discordId'))
-      this.addUser(event.entity);
+    if (didUpdate(event, 'discordId')) this.addUser(event.entity);
   }
 
   private addUser(user: User) {

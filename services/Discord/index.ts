@@ -15,33 +15,55 @@ class DiscordService {
     this.client = new SDK.Client();
   }
 
-  initialize = async () => {
-    await this.client.login(config.discord.botToken);
-    this.guild = await this.client.guilds.resolve(config.discord.guildId);
-  };
+  initialize = async () => await this.client.login(config.discord.botToken);
+
+  async getGuild() {
+    return this.client.guilds.resolve(config.discord.guildId);
+  }
 
   // Channel
 
-  createChannel = (name: string) => this.guild.channels.create(name);
+  createChannel = async (name: string) => (await this.getGuild()).channels.create(name);
 
   // Role
 
   createRole = async (channelId: string, name: string, permissions: string[]) => {
-    const role = await this.guild.roles.create({ data: { name } });
-    const channel = await this.guild.channels.resolve(channelId);
+    const guild = await this.getGuild();
+    const role = await guild.roles.create({ data: { name } });
+    const channel = await guild.channels.resolve(channelId);
 
-    channel.overwritePermissions([{ id: role.id, allow: permissions }]);
-
+    await channel.createOverwrite(role.id, allowedPermissions(permissions));
     return role;
   };
 
   deleteRole = async (roleId: string) => {
-    await (await this.guild.roles.resolve(roleId))?.delete();
+    await (await (await this.getGuild()).roles.resolve(roleId))?.delete();
 
     return { id: roleId };
   };
 
   // User
+
+  addUser = async (userId: string, accessToken: string) =>
+    (await (await this.getGuild()).addMember(userId, { accessToken })).user;
+
+  assignRole = async (userId: string, roleId: string) => {
+    const user = await (await this.getGuild()).members.resolve(userId);
+    if (!user) return null;
+
+    await user.roles.add(roleId);
+
+    return { id: `${userId}:${roleId}` };
+  };
+
+  unassignRole = async (userId: string, roleId: string) => {
+    const user = await (await this.getGuild()).members.resolve(userId);
+    if (!user) return null;
+
+    await user.roles.remove(roleId);
+
+    return { id: `${userId}:${roleId}` };
+  };
 
   getAccessToken = async (
     refreshToken: string,
@@ -71,25 +93,6 @@ class DiscordService {
       console.log(err);
       return null;
     }
-  };
-
-  addUser = async (userId: string, accessToken: string) =>
-    (await this.guild.addMember(userId, { accessToken })).user;
-
-  assignRole = async (userId: string, roleId: string) => {
-    const user = await this.guild.members.resolve(userId);
-
-    await user.edit({ roles: [...user.roles, roleId] });
-
-    return { id: `${userId}:${roleId}` };
-  };
-
-  unassignRole = async (userId: string, roleId: string) => {
-    const user = await this.guild.members.resolve(userId);
-
-    await user.edit({ roles: [...user.roles, roleId] });
-
-    return { id: `${userId}:${roleId}` };
   };
 }
 

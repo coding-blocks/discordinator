@@ -14,11 +14,7 @@ export class RoleSubscriber implements EntitySubscriberInterface<Role> {
     return Role;
   }
 
-  afterInsert(event: InsertEvent<Role>) {
-    Sync.addRole(event.entity);
-  }
-
-  afterRemove(event: RemoveEvent<Role>) {
-    Sync.removeRole(event.entity);
+  afterInsert({ entity }: InsertEvent<Role>) {
+    Sync.addRole(entity);
   }
 }
