@@ -8,3 +8,6 @@ temp/
 .env
 package-lock.json
 .swp
+ide
+yarn-error.log
+yarn.lock
