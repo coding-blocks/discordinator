@@ -30,10 +30,10 @@ const start = async () => {
   app.use(
     cors({
       origin: [
-        'test.online',
-        'online.codingblocks.com',
-        'online.codingblocks.xyz',
-        '127.0.0.1:4200',
+        'http://test.online',
+        'https://online.codingblocks.com',
+        'https://online.codingblocks.xyz',
+        'http://127.0.0.1:4200',
       ],
     }),
   );
