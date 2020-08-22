@@ -29,6 +29,7 @@ const start = async () => {
   app.use(bodyParser.json());
   app.use(
     cors({
+      credentials: true,
       origin: [
         'http://test.online',
         'https://online.codingblocks.com',
