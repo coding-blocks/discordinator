@@ -12,6 +12,7 @@ import { useMiddeware } from '~/utils/useMiddeware';
 import { AuthorizationMiddleware } from '~/middlewares/Authorization';
 import config from '~/config';
 import { Discord } from '~/services/Discord';
+import * as cors from 'cors';
 
 const start = async () => {
   const app = express();
@@ -26,6 +27,7 @@ const start = async () => {
 
   // middewares
   app.use(bodyParser.json());
+  app.use(cors({ origin: '*' }));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(compression());
 

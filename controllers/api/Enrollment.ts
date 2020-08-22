@@ -67,7 +67,9 @@ export class EnrollmentController {
     if (!user) return;
 
     const roles = await Promise.all(
-      studentRoles.map((role) => UserRole.findOrCreateAndRestore({ user, role }, { user, role })),
+      studentRoles.map((role) =>
+        UserRole.findOrCreateAndRestore({ where: { user, role } }, { user, role }),
+      ),
     );
 
     return { channels, roles, user };
