@@ -57,14 +57,14 @@ export abstract class BaseEntity extends Base {
 
   // NOTE(naman): repository.softDelete does not emit UpdateEvent
   async softDelete(): Promise<any> {
-    if (!!this.deletedAt) return;
+    if (!!this.deletedAt) return Promise.resolve();
     this.deletedAt = new Date();
     return await this.save();
   }
 
   // NOTE(naman): repository.restore does not emit UpdateEvent
   async restore(): Promise<any> {
-    if (!this.deletedAt) return;
+    if (!this.deletedAt) return Promise.resolve();
     this.deletedAt = null;
     return await this.save();
   }

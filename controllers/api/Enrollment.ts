@@ -5,7 +5,7 @@ import { User, UserIdKind } from '~/entity/User';
 import { Role, RoleKind } from '~/entity/Role';
 import { UserRole } from '~/entity/UserRole';
 import { validate } from '~/utils/validate';
-import { Channel } from '~/entity/Channel';
+import { Channel, ChannelKind } from '~/entity/Channel';
 import { In } from 'typeorm';
 
 export class NewUserEnrollment {
@@ -38,7 +38,12 @@ export class EnrollmentController {
     enrollment: NewUserEnrollment | OldUserEnrollment,
   ) {
     const { courseKind, courseCode, batchCode } = batch;
-    const channels = await Channel.find({ where: { courseKind, courseCode, batchCode } });
+    const channels = await Channel.find({
+      where: [
+        { kind: ChannelKind.LOBBY, courseCode },
+        { kind: ChannelKind.BATCH, courseKind, courseCode, batchCode },
+      ],
+    });
     if (!channels.length) return;
 
     const studentRoles = await Role.find({
@@ -62,13 +67,7 @@ export class EnrollmentController {
     if (!user) return;
 
     const roles = await Promise.all(
-      studentRoles.map(async (role) => {
-        const userRole =
-          (await UserRole.find({ user, role }))[0] || (await new UserRole({ user, role }).save());
-        await userRole.restore();
-
-        return userRole;
-      }),
+      studentRoles.map((role) => UserRole.findOrCreateAndRestore({ user, role }, { user, role })),
     );
 
     return { channels, roles, user };
