@@ -27,7 +27,16 @@ const start = async () => {
 
   // middewares
   app.use(bodyParser.json());
-  app.use(cors({ origin: '*' }));
+  app.use(
+    cors({
+      origin: [
+        'test.online',
+        'online.codingblocks.com',
+        'online.codingblocks.xyz',
+        '127.0.0.1:4200',
+      ],
+    }),
+  );
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(compression());
 
