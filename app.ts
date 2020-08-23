@@ -10,6 +10,9 @@ import { createConnection } from 'typeorm';
 import { useExpressServer } from 'routing-controllers';
 import { useMiddeware } from '~/utils/useMiddeware';
 import { AuthorizationMiddleware } from '~/middlewares/Authorization';
+import { ErrorHandlerMiddleware } from '~/middlewares/ErrorHandler';
+import { MorganMiddleware } from '~/middlewares/Morgan';
+import * as Sentry from '@sentry/node';
 import config from '~/config';
 import { Discord } from '~/services/Discord';
 import * as cors from 'cors';
@@ -24,6 +27,13 @@ const start = async () => {
   // init discord client
   await Discord.initialize();
   console.log('Discord client initialized.');
+
+  if (config.sentry.enabled) {
+    Sentry.init({ dsn: config.sentry.dsn });
+    app.use(Sentry.Handlers.requestHandler());
+
+    console.log('Sentry initialize.');
+  }
 
   // middewares
   app.use(bodyParser.json());
@@ -44,15 +54,9 @@ const start = async () => {
   // add api controllers
   app.use('/api', useMiddeware(AuthorizationMiddleware));
   useExpressServer(app, {
-    routePrefix: '/api',
-    controllers: [__dirname + '/controllers/api/**/*.ts'],
-    validation: true,
-  });
-
-  // add app controllers
-  useExpressServer(app, {
-    routePrefix: '/app',
-    controllers: [__dirname + '/controllers/app/**/*.ts'],
+    controllers: [__dirname + '/controllers/**/*.ts'],
+    middlewares: [MorganMiddleware, ErrorHandlerMiddleware],
+    defaultErrorHandler: false,
     validation: true,
   });
 

@@ -1,4 +1,4 @@
 import { JsonController } from 'routing-controllers';
 
-@JsonController('/')
+@JsonController('/app')
 export class IndexAPPController {}

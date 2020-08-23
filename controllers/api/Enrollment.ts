@@ -27,7 +27,7 @@ export class OldUserEnrollment {
   kind: UserIdKind;
 }
 
-@JsonController('/enrollments')
+@JsonController('/api/enrollments')
 export class EnrollmentController {
   @Post('/')
   @OnUndefined(NotFoundError)

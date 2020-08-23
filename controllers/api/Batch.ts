@@ -2,7 +2,7 @@ import { JsonController, Body, Post, Delete, OnUndefined } from 'routing-control
 import { Role, RoleKind } from '~/entity/Role';
 import { Channel, ChannelKind } from '~/entity/Channel';
 
-@JsonController('/batches')
+@JsonController('/api/batches')
 export class BatchController {
   @Post('/')
   async post(@Body() body: { courseCode: string; courseKind: string; batchCode: string }) {

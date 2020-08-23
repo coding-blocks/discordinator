@@ -24,7 +24,7 @@ class SessionManager {
 
 const sessions = new SessionManager();
 
-@JsonController('/connect')
+@JsonController('/app/connect')
 export class ConnectController {
   private onSuccessRedirect: string = config.oneauth.url;
 

@@ -2,7 +2,8 @@
   "name": "discordinator",
   "license": "GPL-3.0-only",
   "scripts": {
-    "start": "ts-node app.ts",
+    "start": "node build/app.js",
+    "build": "tsc",
     "dev": "nodemon -V -w './**/*.ts' -i './**/*.spec.ts' -x 'ts-node' app.ts",
     "eslint": "eslint '*/**/*.{js,ts}' --quiet --fix",
     "prettier": "prettier --write '*/**/*.{js,ts}' --loglevel silent",
@@ -10,9 +11,11 @@
     "generate:token": "ts-node ./bin/generateAccessToken.ts --audience"
   },
   "dependencies": {
+    "@sentry/node": "^5.21.3",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "camel-case": "^4.1.1",
+    "chalk": "^4.1.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
     "compression": "^1.7.4",
@@ -23,6 +26,7 @@
     "form-data": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.27.0",
+    "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "node-cron": "^2.0.3",
     "node-fetch": "^2.6.0",

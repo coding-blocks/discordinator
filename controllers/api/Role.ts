@@ -16,7 +16,7 @@ import { belongsToEnum } from '~/utils/belongsToEnum';
 import { Channel, ChannelKind } from '~/entity/Channel';
 import { NotFoundError } from '~/controllers/errors/NotFound';
 
-@JsonController('/roles')
+@JsonController('/api/roles')
 export class RoleController {
   @Get('/')
   getAll(

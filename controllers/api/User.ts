@@ -15,7 +15,7 @@ import { User, UserIdKind } from '~/entity/User';
 import { UserRole } from '~/entity/UserRole';
 import { Role } from '~/entity/Role';
 
-@JsonController('/users')
+@JsonController('/api/users')
 export class UserController {
   @Get('/')
   getAll(@QueryParam('skip') skip?: number, @QueryParam('take') take?: number) {

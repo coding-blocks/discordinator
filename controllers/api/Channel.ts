@@ -17,7 +17,7 @@ import { Channel, ChannelKind } from '~/entity/Channel';
 import { NotFoundError } from '~/controllers/errors/NotFound';
 import { DEFAULT_PAGINATION_LIMIT } from '~/entity/concerns/BaseEntity';
 
-@JsonController('/channels')
+@JsonController('/api/channels')
 export class ChannelController {
   @Get('/')
   getAll(

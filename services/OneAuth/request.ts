@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import config from '~/config';
+import * as Sentry from '@sentry/node';
 import { IRequestOptions } from './types';
 
 export const request = async (url: string, options: IRequestOptions = {}): Promise<any> => {
@@ -16,6 +17,7 @@ export const request = async (url: string, options: IRequestOptions = {}): Promi
     throw res;
   } catch (err) {
     console.log(err);
+    Sentry.captureException(err);
     return null;
   }
 };

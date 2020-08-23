@@ -2,7 +2,7 @@ import { JsonController, Get, CookieParam } from 'routing-controllers';
 import { OneAuth } from '~/services/OneAuth';
 import { User, UserIdKind } from '~/entity/User';
 
-@JsonController('/me')
+@JsonController('/app/me')
 export class MeController {
   @Get('/')
   async getOne(@CookieParam('oneauth') accessCookie?: string) {

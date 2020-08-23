@@ -27,7 +27,7 @@ export class OldUserEnrollment {
   kind: UserIdKind;
 }
 
-@JsonController('/assistants')
+@JsonController('/api/assistants')
 export class AssistantController {
   @Post('/')
   @OnUndefined(NotFoundError)

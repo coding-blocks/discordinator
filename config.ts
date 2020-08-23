@@ -20,4 +20,8 @@ export default {
   cron: {
     enabled: process.env.CRON_ENABLED === 'true',
   },
+  sentry: {
+    enabled: process.env.NODE_ENV === 'production',
+    dsn: process.env.SENTRY_DSN,
+  },
 };
