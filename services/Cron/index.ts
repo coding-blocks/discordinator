@@ -3,17 +3,12 @@ import { Worker } from '~/Workers';
 import { SyncOneAuthUsers } from '~/Workers/SyncOneAuthUsers';
 import { SyncDiscordUsers } from '~/Workers/SyncDiscordUsers';
 import { SyncDiscordRoles } from '~/Workers/SyncDiscordRoles';
+import { SyncDiscordUserRoles } from '~/Workers/SyncDiscordUserRoles';
 
 export class Cron {
   static Jobs: { [time: string]: typeof Worker[] } = {
     // every 5 seconds
-    '*/5 * * * * *': [SyncDiscordRoles],
-
-    // every minute
-    '*/1 * * * *': [SyncDiscordRoles],
-
-    // every 5 minutes
-    '*/5 * * * *': [SyncDiscordUsers],
+    '*/5 * * * * *': [SyncDiscordUsers, SyncDiscordRoles, SyncDiscordUserRoles],
 
     // every 10 minutes
     '*/10 * * * *': [SyncOneAuthUsers],
