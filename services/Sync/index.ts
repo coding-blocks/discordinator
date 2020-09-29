@@ -1,16 +1,24 @@
 import { User } from '~/entity/User';
-import { Channel } from '~/entity/Channel';
+import { Channel, ChannelKind } from '~/entity/Channel';
 import { Discord } from '~/services/Discord';
 import { UserRole } from '~/entity/UserRole';
 import { Role, RolePermissions } from '~/entity/Role';
+import config from '~/config';
 
 export type SyncResult = Promise<boolean>;
+
+const parentChannels = {
+  [ChannelKind.LOBBY]: config.discord.lobbyChannelId,
+  [ChannelKind.BATCH]: config.discord.classroomChannelId,
+};
 
 export class Sync {
   // Channel
 
   static addChannel = async (channel: Channel): SyncResult =>
-    channel.sync<Channel>(() => Discord.createChannel(channel.name));
+    channel.sync<Channel>(() =>
+      Discord.createChannel(channel.name, { parent: parentChannels[channel.kind] }),
+    );
 
   // Role
 

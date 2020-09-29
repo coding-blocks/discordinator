@@ -23,7 +23,8 @@ class DiscordService {
 
   // Channel
 
-  createChannel = async (name: string) => (await this.getGuild()).channels.create(name);
+  createChannel = async (name: string, options?: { parent?: string }) =>
+    (await this.getGuild()).channels.create(name, options);
 
   // Role
 

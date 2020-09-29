@@ -16,6 +16,8 @@ export default {
     clientId: process.env.DISCORD_CLIENT_ID,
     clientSecret: process.env.DISCORD_CLIENT_SECRET,
     scopes: ['identify', 'email', 'guilds.join', 'gdm.join'],
+    lobbyChannelId: process.env.DISCORD_LOBBY_CHANNEL_ID,
+    classroomChannelId: process.env.DISCORD_CLASSROOM_CHANNEL_ID,
   },
   cron: {
     enabled: process.env.CRON_ENABLED === 'true',
