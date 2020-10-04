@@ -59,7 +59,7 @@ export class Channel extends DiscordEntity {
 
   static getName({ kind, courseCode, courseKind, batchCode }: IGetNameProps): string {
     if (kind === ChannelKind.BATCH) return batchCode.toUpperCase();
-    if (kind === ChannelKind.LOBBY) return `${courseCode}-${courseKind}`.toUpperCase();
+    if (kind === ChannelKind.LOBBY) return courseCode.toUpperCase();
 
     return '';
   }
