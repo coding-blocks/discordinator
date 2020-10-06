@@ -41,7 +41,8 @@ export class Sync {
 
   static addUser = async (user: User): SyncResult =>
     user.sync<User>(async () => {
-      const accessTokenResult = await Discord.getAccessToken(user.refreshToken);
+      const accessTokenResult =
+        user.refreshToken && (await Discord.getAccessToken(user.refreshToken));
       if (!accessTokenResult) return;
 
       const { access_token, refresh_token } = accessTokenResult;
