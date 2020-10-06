@@ -16,7 +16,7 @@ export class SyncDiscordUsers extends Worker {
           return Promise.resolve(null);
         }
 
-        return Sync.addUser(user);
+        return !!user.refreshToken && Sync.addUser(user);
       }),
     );
   }
