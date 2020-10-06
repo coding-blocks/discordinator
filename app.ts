@@ -54,7 +54,7 @@ const start = async () => {
   // add api controllers
   app.use('/api', useMiddeware(AuthorizationMiddleware));
   useExpressServer(app, {
-    controllers: [__dirname + '/controllers/**/*.ts'],
+    controllers: [__dirname + '/controllers/**/*.js'],
     middlewares: [MorganMiddleware, ErrorHandlerMiddleware],
     defaultErrorHandler: false,
     validation: true,
