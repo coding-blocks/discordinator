@@ -11,3 +11,4 @@ package-lock.json
 ide
 yarn-error.log
 yarn.lock
+ecosystem.config.js

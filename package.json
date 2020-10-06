@@ -59,7 +59,7 @@
     "typescript": "^3.9.5"
   },
   "_moduleAliases": {
-    "~": "."
+    "~": "build"
   },
   "husky": {
     "hooks": {
